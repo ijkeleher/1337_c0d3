@@ -10,7 +10,7 @@ VS5 = {3: 6.99, 5: 8.99}
 MB11 = {2: 9.95, 5: 16.95, 8: 24.95}
 CF = {3: 5.95, 5: 9.95, 9: 16.99}
 
-# a way to access using the code as a key
+# a way to access using the code
 ITEMS = {"VS5": VS5, "MB11": MB11, "CF": CF}
 
 def calculate_price(num, item):
@@ -37,20 +37,22 @@ def calculate_price(num, item):
 # https://stackoverflow.com/questions/20193555/finding-combinations-to-the-provided-sum-value
 
 def a(lst, target):
-    def _a(idx, l, r, t):
+    # lst = list of combos, target is what we are summing to
+    def _a(l, r, t):
         if t == sum(l): # if we reach our target append and escape
             r.append(l)
         elif t < sum(l): # uh-oh we went too far!
             return
-        for u in range(idx, len(lst)): #otherwise recursively keep going
-            _a(u, l + [lst[u]], r, t)
-        return r
-    return _a(0, [], [], target)
+        # otherwise recursively keep going
+        for u in range(0, len(lst)): 
+            _a(l + [lst[u]], r, t)
+        return r # our return list
+    return _a([], [], target)
 
 if __name__ == "__main__":
-    input = input()
-    num, item = input.split()
-    calculate_price(num, item)
+    # input = input()
+    # num, item = input.split()
+    # calculate_price(num, item)
     # tests
     calculate_price(10, "VS5")
     calculate_price(14, "MB11")
