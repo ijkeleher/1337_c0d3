@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import functools
+from functools import reduce
+from itertools import combinations
 
 """
 This is a program to calculate the prices of baked goods
@@ -21,9 +22,9 @@ def calculate_price(amount, item):
         item (string): item code e.g. "VS5"
     """
     iter_list = [k for k in ITEMS[item]]  # grab bundle types
-    combos = a(iter_list, amount)  # work out the best combination
+    combos = subsets_with_sum(iter_list, amount)  # work out the best combination
     # calculate the smallest (by length) list
-    smallest_combo = functools.reduce(lambda a, b: a if a > b else b, combos)
+    smallest_combo = reduce(lambda a, b: a if a > b else b, combos)
     # sum the price and print details
     print(str(amount) + ' ' + str(item) + ' $' +
           str("{:.2f}".format(sum(ITEMS[item][s] for s in smallest_combo))))
@@ -33,7 +34,7 @@ def calculate_price(amount, item):
               " x " + str(c) + " $" + str(ITEMS[item][c]))
 
 
-def a(lst, target):
+def subsets_with_sum(lst, target):
     """
     modified from:
     https://stackoverflow.com/questions/20193555/finding-combinations-to-the-provided-sum-value
@@ -46,14 +47,12 @@ def a(lst, target):
         list: The best combination to reduce shipping costs
     """
     def _a(l, r, t):
-        if t == sum(l):  # if we reach our target append and escape
-            r.append(l)
-        elif t < sum(l):  # uh-oh we went too far!
-            return
+        if t == sum(l): r.append(l)
+        elif t < sum(l): return  # uh-oh we went too far!
         # otherwise recursively keep going
         for u in range(0, len(lst)):
             _a(l + [lst[u]], r, t)
-        return r  # our return list
+        return r  # return best combo
     return _a([], [], target)
 
 
