@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from functools import reduce
-from itertools import combinations
 
 """
 This is a program to calculate the prices of baked goods
