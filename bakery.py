@@ -10,12 +10,9 @@ CF = {3: 5.95, 5: 9.95, 9: 16.99}
 ITEMS = {"VS5": VS5, "MB11": MB11, "CF": CF}  # access data using item code
 
 
-def calculate_price(amount, item):
+def calculate_price(amount: int, item: str) -> None:
     iter_list = [k for k in ITEMS[item]]  # grab bundle types
-    # combos = subsets_with_sum(iter_list, amount)  # find best combination
     combos = subsets_with_sum(iter_list, amount)
-    # combos = subsetSum(iter_list, amount)
-    # print("FINAL CHOICES: ", combos)
     smallest_combo = reduce(lambda a, b: a if a >
                             b else b, combos)  # get smallest list
     print(str(amount) + ' ' + str(item) + ' $' +  # print price details
@@ -25,25 +22,23 @@ def calculate_price(amount, item):
               " x " + str(c) + " $" + str(ITEMS[item][c]))
 
 
-def subsets_with_sum(lst, target):
-    lookup = {} # avoid duplicate combos
-    # Time Complexity: ???
-    def _a(l, r, t, lookup):
-        l.sort() # this really makes it shine
-        if t == sum(l):
-            r.append(l)  # found a solution!
-        elif t < sum(l):
+def subsets_with_sum(iter_lst: list, target: int) -> list:
+
+    def _a(lst: list, rtn: list, tgt: int, lookup: dict) -> list:
+        lst.sort()  # this really makes it shine
+        if tgt == sum(lst):
+            rtn.append(lst)  # found a solution!
+        elif tgt < sum(lst):
             return  # uh-oh we went too far!
-        key = tuple(l)
-        # print("KEY:", key)
+        key = tuple(lst)
         if (key not in lookup):
-            for u in range(0, len(lst)):  # recursively keep going
-                _a(l + [lst[u]], r, t, lookup)
-            lookup[key] = l
+            for u in range(0, len(iter_lst)):  # recursively keep going
+                _a(lst + [iter_lst[u]], rtn, tgt, lookup)
+            lookup[key] = lst
         elif key in lookup:
             return
-        return r  # return combos
-    return _a([], [], target, lookup)
+        return rtn  # return combos
+    return _a([], [], target, {})
 
 
 if __name__ == "__main__":
@@ -51,5 +46,5 @@ if __name__ == "__main__":
     # amount, item = input.split()
     # calculate_price(amount, item)
     calculate_price(150, "VS5")
-    calculate_price(14, "MB11")
-    calculate_price(13, "CF")
+    calculate_price(140, "MB11")
+    calculate_price(130, "CF")
